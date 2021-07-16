@@ -33,10 +33,16 @@ Install-Module -Repository azure-sdk-tools-feed powershell-yaml
 
 $allowListFilePath = Join-Path $AllowListLocation "${ServiceDirectory}.yml"
 $allowListData = @{}
+LogDebug "Allow List File Path: ${allowListFilePath}"
 
-if (Test-Path $allowListFilePath)
+if (Test-Path -Path $allowListFilePath)
 {
     $allowListData = ConvertFrom-Yaml (Get-Content $allowListFilePath -Raw)
+    LogDebug "Allow List Data: ${allowListData.Count}"
+}
+else {
+    LogError "Allow list path ${allowListFilePath} does not exisit."
+    exit 1
 }
 
 $poliCheckData = Get-Content $PoliCheckResultFilePath | ConvertFrom-Json
